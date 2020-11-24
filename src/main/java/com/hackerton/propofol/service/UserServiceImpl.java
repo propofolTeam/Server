@@ -31,6 +31,8 @@ public class UserServiceImpl implements UserService {
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
 
+    private final ImageService imageService;
+
     private final JwtTokenProvider jwtTokenProvider;
 
     private final AuthenticationFacade authenticationFacade;

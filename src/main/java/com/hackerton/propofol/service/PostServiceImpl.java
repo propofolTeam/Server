@@ -42,6 +42,8 @@ public class PostServiceImpl implements PostService {
     private final CommentRepository commentRepository;
     private final PostFileRepository postFileRepository;
 
+    private final ImageService imageService;
+
     private final AuthenticationFacade authenticationFacade;
 
     @Value("${file.upload.dir}")
@@ -164,7 +166,7 @@ public class PostServiceImpl implements PostService {
 
     @SneakyThrows
     @Override
-    public ResponseEntity<Resource> downloadFile(Long postId, String fileId) {
+    public ResponseEntity<Resource> downloadFile(Long postId, String fileName) {
         postRepository.findById(postId)
                 .orElseThrow(PostNotFoundException::new);
 
