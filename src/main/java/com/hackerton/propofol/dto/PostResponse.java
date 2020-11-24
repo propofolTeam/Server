@@ -13,6 +13,8 @@ public class PostResponse {
 
     private String writer;
 
+    private Long userId;
+
     private String image;
 
     private Integer commentCount;
