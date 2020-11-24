@@ -17,13 +17,9 @@ public enum ErrorCode {
 
     USER_NOT_FOUND(404, "User Not Found"),
     POST_NOT_FOUND(404, "Post Not Found"),
-    CHAT_NOT_FOUND(404, "Chat Not Found"),
 
     PASSWORD_SAME(409, "Password Same Before"),
     USER_DUPLICATION(409, "User is Already Exists"),
-    USER_SAME(409, "User is Same"),
-    USER_NICKNAME_DUPLICATION(409, "User NickName is Already Exists"),
-    USER_PHONE_NUMBER_DUPLICATION(409, "User PhoneNumber is Already Exists"),
 
     INTERNAL_SERVER_ERROR(500, "Internal Server Error");
 
