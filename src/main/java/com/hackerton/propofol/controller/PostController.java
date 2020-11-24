@@ -25,4 +25,9 @@ public class PostController {
     public PostListResponse getList(Pageable pageable) {
         return postService.getList(pageable);
     }
+
+    @DeleteMapping("/{postId}")
+    public void deletePost(@PathVariable @Valid Long postId) {
+        postService.deletePost(postId);
+    }
 }
