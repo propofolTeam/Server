@@ -1,10 +1,13 @@
 package com.hackerton.propofol.controller;
 
+import com.hackerton.propofol.dto.PostContentResponse;
 import com.hackerton.propofol.dto.PostListResponse;
 import com.hackerton.propofol.dto.PostWriteRequest;
 import com.hackerton.propofol.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -22,8 +25,13 @@ public class PostController {
     }
 
     @GetMapping
-    public PostListResponse getList(Pageable pageable) {
+    public PostListResponse getList(@PageableDefault(size = 10, direction = Sort.Direction.ASC) Pageable pageable) {
         return postService.getList(pageable);
+    }
+
+    @GetMapping("/{postId}")
+    public PostContentResponse getContent(@PathVariable @Valid Long postId) {
+        return  postService.getContent(postId);
     }
 
     @DeleteMapping("/{postId}")
