@@ -2,12 +2,10 @@ package com.hackerton.propofol.service;
 
 import com.hackerton.propofol.domain.Post;
 import com.hackerton.propofol.domain.User;
+import com.hackerton.propofol.domain.repository.CommentRepository;
 import com.hackerton.propofol.domain.repository.PostRepository;
 import com.hackerton.propofol.domain.repository.UserRepository;
-import com.hackerton.propofol.dto.JoinRequest;
-import com.hackerton.propofol.dto.LoginRequest;
-import com.hackerton.propofol.dto.ProfileResponse;
-import com.hackerton.propofol.dto.TokenResponse;
+import com.hackerton.propofol.dto.*;
 import com.hackerton.propofol.exception.UserDuplicateException;
 import com.hackerton.propofol.exception.UserNotFoundException;
 import com.hackerton.propofol.security.AuthenticationFacade;
@@ -15,6 +13,8 @@ import com.hackerton.propofol.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -29,6 +29,7 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final PostRepository postRepository;
+    private final CommentRepository commentRepository;
 
     private final JwtTokenProvider jwtTokenProvider;
 
@@ -81,14 +82,26 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ProfileResponse getProfile(Long userId) {
+    public ProfileResponse getProfile(Long userId, Pageable pageable) {
         User user = userRepository.findByEmail(authenticationFacade.getUserEmail())
                 .orElseThrow(UserNotFoundException::new);
 
         User profile = userRepository.findById(userId)
                 .orElseThrow(UserNotFoundException::new);
 
-        List<Post> posts = postRepository.findByUserId(profile.getId());
+        Page<Post> postPage = postRepository.findAllByUserId(pageable, profile.getId());
+
+        List<PostListResponse> posts = new ArrayList<>();
+
+        for (Post post : postPage) {
+            posts.add(
+                    PostListResponse.builder()
+                            .id(post.getId())
+                            .title(post.getTitle())
+                            .commentCount(commentRepository.countByPostId(post.getId()))
+                            .build()
+            );
+        }
 
         String[] postArray = posts.stream().toArray(String[]::new);
 
@@ -97,6 +110,8 @@ public class UserServiceImpl implements UserService {
                 .name(profile.getName())
                 .image(profile.getImage())
                 .isMine(profile.equals(user))
+                .totalElements((int) postPage.getTotalElements())
+                .totalPage(postPage.getTotalPages())
                 .posts(postArray)
                 .build();
     }
