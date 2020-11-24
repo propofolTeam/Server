@@ -15,5 +15,9 @@ public class ProfileResponse {
 
     private boolean isMine;
 
+    private int totalElements;
+
+    private int totalPage;
+
     private String[] posts;
 }
