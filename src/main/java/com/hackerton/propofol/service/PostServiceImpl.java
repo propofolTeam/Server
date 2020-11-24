@@ -8,6 +8,7 @@ import com.hackerton.propofol.domain.repository.UserRepository;
 import com.hackerton.propofol.dto.PostListResponse;
 import com.hackerton.propofol.dto.PostResponse;
 import com.hackerton.propofol.dto.PostWriteRequest;
+import com.hackerton.propofol.exception.PostNotFoundException;
 import com.hackerton.propofol.exception.UserNotFoundException;
 import com.hackerton.propofol.security.AuthenticationFacade;
 import lombok.RequiredArgsConstructor;
@@ -81,6 +82,7 @@ public class PostServiceImpl implements PostService {
                             .id(post.getId())
                             .title(post.getTitle())
                             .writer(user.getName())
+                            .userId(user.getId())
                             .commentCount(commentRepository.countByPostId(post.getId()))
                             .build()
             );
@@ -91,5 +93,16 @@ public class PostServiceImpl implements PostService {
                 .totalPage(postPage.getTotalPages())
                 .response(postResponses)
                 .build();
+    }
+
+    @Override
+    public void deletePost(Long postId) {
+        userRepository.findByEmail(authenticationFacade.getUserEmail())
+                .orElseThrow(UserNotFoundException::new);
+
+        postRepository.findById(postId)
+                .orElseThrow(PostNotFoundException::new);
+
+        postRepository.deleteById(postId);
     }
 }
