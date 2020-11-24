@@ -2,6 +2,7 @@ package com.hackerton.propofol.controller;
 
 import com.hackerton.propofol.dto.JoinRequest;
 import com.hackerton.propofol.dto.LoginRequest;
+import com.hackerton.propofol.dto.ProfileResponse;
 import com.hackerton.propofol.dto.TokenResponse;
 import com.hackerton.propofol.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +23,12 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    private TokenResponse login(@RequestBody @Valid LoginRequest loginRequest) {
+    public TokenResponse login(@RequestBody @Valid LoginRequest loginRequest) {
         return userService.login(loginRequest);
+    }
+
+    @GetMapping("/profile")
+    public ProfileResponse getProfile(@RequestParam("userId") @Valid Long userId) {
+        return userService.getProfile(userId);
     }
 }
