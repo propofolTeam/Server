@@ -1,9 +1,6 @@
 package com.hackerton.propofol.controller;
 
-import com.hackerton.propofol.dto.JoinRequest;
-import com.hackerton.propofol.dto.LoginRequest;
-import com.hackerton.propofol.dto.ProfileResponse;
-import com.hackerton.propofol.dto.TokenResponse;
+import com.hackerton.propofol.dto.*;
 import com.hackerton.propofol.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -32,5 +29,10 @@ public class UserController {
     public ProfileResponse getProfile(@RequestParam("userId") @Valid Long userId,
                                       Pageable pageable) {
         return userService.getProfile(userId, pageable);
+    }
+
+    @PutMapping("/profile")
+    public void updateProfile(@ModelAttribute @Valid ProfileUpdateRequest profileUpdateRequest) {
+        userService.updateProfile(profileUpdateRequest);
     }
 }
