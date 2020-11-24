@@ -13,7 +13,5 @@ public class CommentResponse {
 
     private String writer;
 
-    private Long userId;
-
     private String image;
 }
