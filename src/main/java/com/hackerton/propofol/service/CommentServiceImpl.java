@@ -35,7 +35,7 @@ public class CommentServiceImpl implements CommentService {
                 Comment.builder()
                         .postId(postId)
                         .userId(user.getId())
-                        .comment(commentWriteRequest.getContent())
+                        .comment(commentWriteRequest.getComment())
                         .time(LocalDateTime.now())
                         .build()
         );

@@ -8,5 +8,5 @@ import javax.validation.constraints.NotBlank;
 public class CommentWriteRequest {
 
     @NotBlank
-    private String content;
+    private String comment;
 }
