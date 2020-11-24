@@ -91,19 +91,19 @@ public class UserServiceImpl implements UserService {
 
         Page<Post> postPage = postRepository.findAllByUserId(pageable, profile.getId());
 
-        List<PostListResponse> posts = new ArrayList<>();
+        List<PostResponse> posts = new ArrayList<>();
 
         for (Post post : postPage) {
             posts.add(
-                    PostListResponse.builder()
+                    PostResponse.builder()
                             .id(post.getId())
                             .title(post.getTitle())
+                            .writer(user.getName())
+                            .image(user.getImage())
                             .commentCount(commentRepository.countByPostId(post.getId()))
                             .build()
             );
         }
-
-        String[] postArray = posts.stream().toArray(String[]::new);
 
         return ProfileResponse.builder()
                 .email(profile.getEmail())
@@ -112,7 +112,7 @@ public class UserServiceImpl implements UserService {
                 .isMine(profile.equals(user))
                 .totalElements((int) postPage.getTotalElements())
                 .totalPage(postPage.getTotalPages())
-                .posts(postArray)
+                .posts(posts)
                 .build();
     }
 }
