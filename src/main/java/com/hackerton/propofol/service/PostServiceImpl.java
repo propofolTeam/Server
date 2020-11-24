@@ -143,7 +143,6 @@ public class PostServiceImpl implements PostService {
                             .id(comment.getId())
                             .comment(comment.getComment())
                             .writer(commentWriter.getName())
-                            .userId(commentWriter.getId())
                             .image(commentWriter.getImage())
                             .build()
             );
