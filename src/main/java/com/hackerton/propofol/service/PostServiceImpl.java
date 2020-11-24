@@ -5,6 +5,7 @@ import com.hackerton.propofol.domain.User;
 import com.hackerton.propofol.domain.repository.CommentRepository;
 import com.hackerton.propofol.domain.repository.PostRepository;
 import com.hackerton.propofol.domain.repository.UserRepository;
+import com.hackerton.propofol.dto.PostContentResponse;
 import com.hackerton.propofol.dto.PostListResponse;
 import com.hackerton.propofol.dto.PostResponse;
 import com.hackerton.propofol.dto.PostWriteRequest;
@@ -22,10 +23,9 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -46,21 +46,29 @@ public class PostServiceImpl implements PostService {
         User user = userRepository.findByEmail(authenticationFacade.getUserEmail())
                 .orElseThrow(UserNotFoundException::new);
 
+        Calendar calendar = Calendar.getInstance();
+        Date date = calendar.getTime();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
+        sdf.setTimeZone(TimeZone.getTimeZone("Asia/Seoul"));
+        String time = sdf.format(date);
+
         Post post = postRepository.save(
                 Post.builder()
                         .title(postWriteRequest.getTitle())
                         .content(postWriteRequest.getContent())
                         .userId(user.getId())
-                        .time(LocalDateTime.now())
+                        .createdAt(time)
                         .build()
         );
 
         if(postWriteRequest.getFile() != null) {
-            String filePath = postWriteRequest.getFile().getOriginalFilename();
+            String fileId = UUID.randomUUID().toString();
 
-            postWriteRequest.getFile().transferTo(new File(fileDirPath, filePath));
+            String path = Paths.get(fileDirPath, fileId).toString();
 
-            postRepository.save(post.updateFile(filePath));
+            postRepository.save(post.updateFile(fileId, postWriteRequest.getFile().getOriginalFilename()));
+
+            postWriteRequest.getFile().transferTo(new File(path));
         }
     }
 
@@ -69,7 +77,7 @@ public class PostServiceImpl implements PostService {
         userRepository.findByEmail(authenticationFacade.getUserEmail())
                 .orElseThrow(UserNotFoundException::new);
 
-        Page<Post> postPage = postRepository.findAllByOrderByTimeDesc(pageable);
+        Page<Post> postPage = postRepository.findAllBy(pageable);
 
         List<PostResponse> postResponses = new ArrayList<>();
 
@@ -83,7 +91,9 @@ public class PostServiceImpl implements PostService {
                             .title(post.getTitle())
                             .writer(user.getName())
                             .userId(user.getId())
+                            .image(user.getImage())
                             .commentCount(commentRepository.countByPostId(post.getId()))
+                            .createdAt(post.getCreatedAt())
                             .build()
             );
         }
@@ -92,6 +102,30 @@ public class PostServiceImpl implements PostService {
                 .totalElements((int) postPage.getTotalElements())
                 .totalPage(postPage.getTotalPages())
                 .response(postResponses)
+                .build();
+    }
+
+    @Override
+    public PostContentResponse getContent(Long postId) {
+        User user = userRepository.findByEmail(authenticationFacade.getUserEmail())
+                .orElseThrow(UserNotFoundException::new);
+
+        Post post = postRepository.findById(postId)
+                .orElseThrow(PostNotFoundException::new);
+
+        User writer = userRepository.findById(post.getUserId())
+                .orElseThrow(UserNotFoundException::new);
+
+        return PostContentResponse.builder()
+                .id(postId)
+                .title(post.getTitle())
+                .content(post.getContent())
+                .writer(writer.getName())
+                .image(writer.getImage())
+                .createdAt(post.getCreatedAt())
+                .isMine(writer.equals(user))
+                .fileId(post.getFileId())
+                .fileName(post.getFileName())
                 .build();
     }
 

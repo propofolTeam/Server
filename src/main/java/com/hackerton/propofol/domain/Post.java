@@ -27,15 +27,19 @@ public class Post {
     @Column(nullable = false)
     private String content;
 
-    private String file;
+    private String fileId;
 
-    private LocalDateTime time;
+    private String fileName;
+
+    private String createdAt;
 
     @OneToMany(mappedBy = "postId", cascade = CascadeType.ALL)
     private List<Comment> comments;
 
-    public Post updateFile(String file) {
-        this.file = file;
+    public Post updateFile(String fileId, String fileName) {
+        this.fileId = fileId;
+        this.fileName = fileName;
+
         return this;
     }
 

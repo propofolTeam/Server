@@ -5,19 +5,23 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class PostResponse {
+public class PostContentResponse {
 
     private Long id;
 
     private String title;
 
+    private String content;
+
     private String writer;
-
-    private Long userId;
-
-    private String image;
 
     private String createdAt;
 
-    private Integer commentCount;
+    private String image;
+
+    private boolean isMine;
+
+    private String fileId;
+
+    private String fileName;
 }
