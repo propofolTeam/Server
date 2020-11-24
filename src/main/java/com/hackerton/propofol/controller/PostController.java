@@ -5,9 +5,11 @@ import com.hackerton.propofol.dto.PostListResponse;
 import com.hackerton.propofol.dto.PostWriteRequest;
 import com.hackerton.propofol.service.PostService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -32,6 +34,12 @@ public class PostController {
     @GetMapping("/{postId}")
     public PostContentResponse getContent(@PathVariable @Valid Long postId) {
         return  postService.getContent(postId);
+    }
+
+    @GetMapping("/{postId}/download/{fileId}")
+    public ResponseEntity<Resource> downloadFile(@PathVariable @Valid Long postId,
+                                                 @PathVariable @Valid String fileId) {
+        return postService.downloadFile(postId, fileId);
     }
 
     @DeleteMapping("/{postId}")
