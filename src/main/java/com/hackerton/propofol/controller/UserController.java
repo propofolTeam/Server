@@ -3,6 +3,8 @@ package com.hackerton.propofol.controller;
 import com.hackerton.propofol.dto.*;
 import com.hackerton.propofol.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -27,7 +29,7 @@ public class UserController {
 
     @GetMapping("/profile")
     public ProfileResponse getProfile(@RequestParam("userId") @Valid Long userId,
-                                      Pageable pageable) {
+                                      @PageableDefault(size = 10, direction = Sort.Direction.DESC) Pageable pageable) {
         return userService.getProfile(userId, pageable);
     }
 
