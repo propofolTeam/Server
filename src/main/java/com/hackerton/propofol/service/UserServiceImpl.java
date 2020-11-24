@@ -115,4 +115,25 @@ public class UserServiceImpl implements UserService {
                 .posts(posts)
                 .build();
     }
+
+    @SneakyThrows
+    @Override
+    public void updateProfile(ProfileUpdateRequest profileUpdateRequest) {
+        User user = userRepository.findByEmail(authenticationFacade.getUserEmail())
+                .orElseThrow(UserNotFoundException::new);
+
+        if(profileUpdateRequest.getName() != null) {
+            userRepository.save(user.updateName(profileUpdateRequest.getName()));
+        }
+
+        if(profileUpdateRequest.getImage() != null) {
+            new File(imageDirPath, user.getImage()).deleteOnExit();
+
+            String imageName = UUID.randomUUID().toString();
+
+            userRepository.save(user.updateImage(imageName));
+
+            profileUpdateRequest.getImage().transferTo(new File(imageDirPath, imageName));
+        }
+    }
 }
