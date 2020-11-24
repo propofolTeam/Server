@@ -17,5 +17,7 @@ public class PostResponse {
 
     private String image;
 
+    private String createdAt;
+
     private Integer commentCount;
 }
