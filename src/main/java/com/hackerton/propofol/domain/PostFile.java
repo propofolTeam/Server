@@ -26,4 +26,9 @@ public class PostFile {
     @OneToOne
     @JoinColumn(name = "id")
     private Post post;
+
+    public PostFile updateFileName(String fileName) {
+        this.fileName = fileName;
+        return this;
+    }
 }

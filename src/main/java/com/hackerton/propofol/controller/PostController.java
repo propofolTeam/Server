@@ -2,6 +2,7 @@ package com.hackerton.propofol.controller;
 
 import com.hackerton.propofol.dto.PostContentResponse;
 import com.hackerton.propofol.dto.PostListResponse;
+import com.hackerton.propofol.dto.PostUpdateRequest;
 import com.hackerton.propofol.dto.PostWriteRequest;
 import com.hackerton.propofol.service.PostService;
 import lombok.RequiredArgsConstructor;
@@ -40,6 +41,12 @@ public class PostController {
     public ResponseEntity<Resource> downloadFile(@PathVariable @Valid Long postId,
                                                  @PathVariable @Valid String fileId) {
         return postService.downloadFile(postId, fileId);
+    }
+
+    @PutMapping("/{postId}")
+    public void updatePost(@PathVariable @Valid Long postId,
+                           @ModelAttribute @Valid PostUpdateRequest postUpdateRequest) {
+        postService.updatePost(postId, postUpdateRequest);
     }
 
     @DeleteMapping("/{postId}")

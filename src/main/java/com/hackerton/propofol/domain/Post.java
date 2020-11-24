@@ -35,4 +35,13 @@ public class Post {
     @OneToMany(mappedBy = "postId", cascade = CascadeType.ALL)
     private List<Comment> comments;
 
+    public Post updateTitle(String title) {
+        this.title = title;
+        return this;
+    }
+
+    public Post updateContent(String content) {
+        this.content = content;
+        return this;
+    }
 }
