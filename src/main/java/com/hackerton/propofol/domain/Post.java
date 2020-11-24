@@ -27,20 +27,12 @@ public class Post {
     @Column(nullable = false)
     private String content;
 
-    private String fileId;
-
-    private String fileName;
+    @OneToOne(mappedBy = "post", cascade = CascadeType.ALL)
+    private PostFile postFile;
 
     private String createdAt;
 
     @OneToMany(mappedBy = "postId", cascade = CascadeType.ALL)
     private List<Comment> comments;
-
-    public Post updateFile(String fileId, String fileName) {
-        this.fileId = fileId;
-        this.fileName = fileName;
-
-        return this;
-    }
 
 }
