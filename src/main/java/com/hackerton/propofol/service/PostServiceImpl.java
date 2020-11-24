@@ -181,6 +181,31 @@ public class PostServiceImpl implements PostService {
                 .body(resource);
     }
 
+    @SneakyThrows
+    @Override
+    public void updatePost(Long postId, PostUpdateRequest postUpdateRequest) {
+        userRepository.findByEmail(authenticationFacade.getUserEmail())
+                .orElseThrow(UserNotFoundException::new);
+
+        Post post = postRepository.findById(postId)
+                .orElseThrow(PostNotFoundException::new);
+
+        if(postUpdateRequest.getTitle() != null) {
+            postRepository.save(post.updateTitle(postUpdateRequest.getTitle()));
+        }
+
+        if(postUpdateRequest.getContent() != null) {
+            postRepository.save(post.updateContent(postUpdateRequest.getContent()));
+        }
+
+        if(postUpdateRequest.getFile() != null) {
+            PostFile postFile = postFileRepository.findByPostId(postId);
+
+            postUpdateRequest.getFile().transferTo(new File(postFile.getFilePath()));
+            postFileRepository.save(postFile.updateFileName(postUpdateRequest.getFile().getOriginalFilename()));
+        }
+    }
+
     @Override
     public void deletePost(Long postId) {
         userRepository.findByEmail(authenticationFacade.getUserEmail())
