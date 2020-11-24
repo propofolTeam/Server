@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import org.springframework.data.domain.Pageable;
 
 @RestController
 @RequestMapping("/user")
@@ -28,7 +29,8 @@ public class UserController {
     }
 
     @GetMapping("/profile")
-    public ProfileResponse getProfile(@RequestParam("userId") @Valid Long userId) {
-        return userService.getProfile(userId);
+    public ProfileResponse getProfile(@RequestParam("userId") @Valid Long userId,
+                                      Pageable pageable) {
+        return userService.getProfile(userId, pageable);
     }
 }
