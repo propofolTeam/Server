@@ -1,5 +1,6 @@
 package com.hackerton.propofol.service;
 
+import com.hackerton.propofol.domain.Comment;
 import com.hackerton.propofol.domain.Post;
 import com.hackerton.propofol.domain.PostFile;
 import com.hackerton.propofol.domain.User;
@@ -7,10 +8,7 @@ import com.hackerton.propofol.domain.repository.CommentRepository;
 import com.hackerton.propofol.domain.repository.PostFileRepository;
 import com.hackerton.propofol.domain.repository.PostRepository;
 import com.hackerton.propofol.domain.repository.UserRepository;
-import com.hackerton.propofol.dto.PostContentResponse;
-import com.hackerton.propofol.dto.PostListResponse;
-import com.hackerton.propofol.dto.PostResponse;
-import com.hackerton.propofol.dto.PostWriteRequest;
+import com.hackerton.propofol.dto.*;
 import com.hackerton.propofol.exception.PostNotFoundException;
 import com.hackerton.propofol.exception.UserNotFoundException;
 import com.hackerton.propofol.security.AuthenticationFacade;
@@ -134,6 +132,23 @@ public class PostServiceImpl implements PostService {
         User writer = userRepository.findById(post.getUserId())
                 .orElseThrow(UserNotFoundException::new);
 
+        List<CommentResponse> commentResponses = new ArrayList<>();
+
+        for (Comment comment : commentRepository.findByPostId(postId)) {
+            User commentWriter = userRepository.findById(comment.getUserId())
+                    .orElseThrow(UserNotFoundException::new);
+
+            commentResponses.add(
+                    CommentResponse.builder()
+                            .id(comment.getId())
+                            .comment(comment.getComment())
+                            .writer(commentWriter.getName())
+                            .userId(commentWriter.getId())
+                            .image(commentWriter.getImage())
+                            .build()
+            );
+        }
+
         return PostContentResponse.builder()
                 .id(postId)
                 .title(post.getTitle())
@@ -144,6 +159,7 @@ public class PostServiceImpl implements PostService {
                 .isMine(writer.equals(user))
                 .fileId(postFile.getFileId())
                 .fileName(postFile.getFileName())
+                .comments(commentResponses)
                 .build();
     }
 
