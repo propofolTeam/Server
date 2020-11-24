@@ -3,6 +3,7 @@ package com.hackerton.propofol.domain;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Getter
 @Entity
@@ -26,4 +27,7 @@ public class User {
 
     @Column(nullable = false)
     private String image;
+
+    @OneToMany(mappedBy = "userId", cascade = CascadeType.ALL)
+    private List<Post> postList;
 }

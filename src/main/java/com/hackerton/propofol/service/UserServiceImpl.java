@@ -1,12 +1,16 @@
 package com.hackerton.propofol.service;
 
+import com.hackerton.propofol.domain.Post;
 import com.hackerton.propofol.domain.User;
+import com.hackerton.propofol.domain.repository.PostRepository;
 import com.hackerton.propofol.domain.repository.UserRepository;
 import com.hackerton.propofol.dto.JoinRequest;
 import com.hackerton.propofol.dto.LoginRequest;
+import com.hackerton.propofol.dto.ProfileResponse;
 import com.hackerton.propofol.dto.TokenResponse;
 import com.hackerton.propofol.exception.UserDuplicateException;
 import com.hackerton.propofol.exception.UserNotFoundException;
+import com.hackerton.propofol.security.AuthenticationFacade;
 import com.hackerton.propofol.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -15,6 +19,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -22,8 +28,11 @@ import java.util.UUID;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final PostRepository postRepository;
 
     private final JwtTokenProvider jwtTokenProvider;
+
+    private final AuthenticationFacade authenticationFacade;
 
     private final PasswordEncoder passwordEncoder;
 
@@ -68,6 +77,27 @@ public class UserServiceImpl implements UserService {
                 .accessToken(jwtTokenProvider.generateAccessToken(email))
                 .refreshToken(jwtTokenProvider.generateRefreshToken(email))
                 .tokenType(prefix)
+                .build();
+    }
+
+    @Override
+    public ProfileResponse getProfile(Long userId) {
+        User user = userRepository.findByEmail(authenticationFacade.getUserEmail())
+                .orElseThrow(UserNotFoundException::new);
+
+        User profile = userRepository.findById(userId)
+                .orElseThrow(UserNotFoundException::new);
+
+        List<Post> posts = postRepository.findByUserId(profile.getId());
+
+        String[] postArray = posts.stream().toArray(String[]::new);
+
+        return ProfileResponse.builder()
+                .email(profile.getEmail())
+                .name(profile.getName())
+                .image(profile.getImage())
+                .isMine(profile.equals(user))
+                .posts(postArray)
                 .build();
     }
 }
