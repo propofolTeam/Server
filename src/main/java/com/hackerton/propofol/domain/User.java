@@ -30,4 +30,14 @@ public class User {
 
     @OneToMany(mappedBy = "userId", cascade = CascadeType.ALL)
     private List<Post> postList;
+
+    public User updateName(String name) {
+        this.name = name;
+        return this;
+    }
+
+    public User updateImage(String image) {
+        this.image = image;
+        return this;
+    }
 }
