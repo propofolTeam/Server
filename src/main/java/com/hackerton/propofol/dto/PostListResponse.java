@@ -1,5 +1,6 @@
 package com.hackerton.propofol.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -13,5 +14,6 @@ public class PostListResponse {
 
     private int totalPage;
 
+    @JsonProperty("response")
     private List response;
 }
