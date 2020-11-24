@@ -5,6 +5,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Entity
@@ -29,6 +30,9 @@ public class Post {
     private String file;
 
     private LocalDateTime time;
+
+    @OneToMany(mappedBy = "postId", cascade = CascadeType.ALL)
+    private List<Comment> comments;
 
     public Post updateFile(String file) {
         this.file = file;
