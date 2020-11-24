@@ -3,6 +3,8 @@ package com.hackerton.propofol.dto;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.util.List;
+
 @Getter
 @Builder
 public class ProfileResponse {
@@ -19,5 +21,5 @@ public class ProfileResponse {
 
     private int totalPage;
 
-    private String[] posts;
+    private List posts;
 }
