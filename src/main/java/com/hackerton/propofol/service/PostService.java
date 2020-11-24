@@ -8,4 +8,5 @@ public interface PostService {
 
     void write(PostWriteRequest postWriteRequest);
     PostListResponse getList(Pageable pageable);
+    void deletePost(Long postId);
 }
