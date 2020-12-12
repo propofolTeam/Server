@@ -8,6 +8,6 @@ public interface UserService {
 
     void join(JoinRequest joinRequest);
     TokenResponse login(LoginRequest loginRequest);
-    ProfileResponse getProfile(Long userId, Pageable pageable);
+    ProfileResponse getProfile(Pageable pageable);
     void updateProfile(ProfileUpdateRequest profileUpdateRequest);
 }

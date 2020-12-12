@@ -31,8 +31,6 @@ public class UserServiceImpl implements UserService {
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
 
-    private final ImageService imageService;
-
     private final JwtTokenProvider jwtTokenProvider;
 
     private final AuthenticationFacade authenticationFacade;
@@ -84,14 +82,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ProfileResponse getProfile(Long userId, Pageable pageable) {
+    public ProfileResponse getProfile(Pageable pageable) {
         User user = userRepository.findByEmail(authenticationFacade.getUserEmail())
                 .orElseThrow(UserNotFoundException::new);
 
-        User profile = userRepository.findById(userId)
-                .orElseThrow(UserNotFoundException::new);
-
-        Page<Post> postPage = postRepository.findAllByUserId(pageable, profile.getId());
+        Page<Post> postPage = postRepository.findAllByUserId(pageable, user.getId());
 
         List<PostResponse> posts = new ArrayList<>();
 
@@ -108,10 +103,9 @@ public class UserServiceImpl implements UserService {
         }
 
         return ProfileResponse.builder()
-                .email(profile.getEmail())
-                .name(profile.getName())
-                .image(profile.getImage())
-                .isMine(profile.equals(user))
+                .email(user.getEmail())
+                .name(user.getName())
+                .image(user.getImage())
                 .totalElements((int) postPage.getTotalElements())
                 .totalPage(postPage.getTotalPages())
                 .posts(posts)

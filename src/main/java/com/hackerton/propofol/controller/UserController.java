@@ -28,9 +28,8 @@ public class UserController {
     }
 
     @GetMapping("/profile")
-    public ProfileResponse getProfile(@RequestParam("userId") @Valid Long userId,
-                                      @PageableDefault(size = 10, direction = Sort.Direction.DESC) Pageable pageable) {
-        return userService.getProfile(userId, pageable);
+    public ProfileResponse getProfile(@PageableDefault(size = 10, direction = Sort.Direction.DESC) Pageable pageable) {
+        return userService.getProfile(pageable);
     }
 
     @PutMapping("/profile")
