@@ -1,11 +1,8 @@
 package com.hackerton.propofol.security;
 
-import com.hackerton.propofol.domain.User;
 import com.hackerton.propofol.domain.repository.UserRepository;
 import com.hackerton.propofol.exception.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
