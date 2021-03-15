@@ -1,0 +1,38 @@
+server:
+  port: 8000
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/propofol?useSSL=false&characterEncoding=UTF-8&serverTimezone=UTC
+    username: root
+    password: hanif1293@
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    generate-ddl: true
+
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 30MB
+      max-request-size: 30MB
+
+auth:
+  jwt:
+    secret : dfjklfasnufidenwrewoifndm
+    header : Authorization
+    prefix : Bearer
+    exp :
+      access : 1800000
+      refresh : 604800000
+
+image:
+  upload:
+    dir: C:\Users\user\Desktop\대덕SW\2020해커톤\Server\src\main\resources\image
+
+file:
+  upload:
+    dir: C:\Users\user\Desktop\대덕SW\2020해커톤\Server\src\main\resources\file
