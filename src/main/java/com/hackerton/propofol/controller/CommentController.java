@@ -1,6 +1,6 @@
 package com.hackerton.propofol.controller;
 
-import com.hackerton.propofol.dto.CommentWriteRequest;
+import  com.hackerton.propofol.dto.CommentWriteRequest;
 import com.hackerton.propofol.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;

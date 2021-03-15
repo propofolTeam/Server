@@ -15,8 +15,6 @@ public class ProfileResponse {
 
     private String image;
 
-    private boolean isMine;
-
     private int totalElements;
 
     private int totalPage;
